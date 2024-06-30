@@ -45,7 +45,7 @@ public class UpdateChecker {
     }
 
     public void logUpdates() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        Bukkit.getAsyncScheduler().runNow(plugin, t -> {
             try {
                 if (checkForUpdates()) {
                     Bukkit.getConsoleSender()

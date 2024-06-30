@@ -36,15 +36,19 @@ public class Drop extends SubCmd {
 
             ItemStack item = ItemEdit.get().getServerStorage().getItem(args[1]);
             World world = Bukkit.getWorld(args[3]);
+            if (world == null)
+                throw new IllegalArgumentException("World not found");
 
-            int toGive = amount;
             int stackSize = item.getMaxStackSize();
-            while (toGive > 0) {
-                item.setAmount(Math.min(toGive, stackSize));
-                world.dropItem(new Location(world, Double.parseDouble(args[4]), Double.parseDouble(args[5]),
-                        Double.parseDouble(args[6])), item.clone());
-                toGive -= Math.min(toGive, stackSize);
-            }
+            final Location loc = new Location(world, Double.parseDouble(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[6]));
+            getPlugin().getServer().getRegionScheduler().run(getPlugin(), loc, task -> {
+                int toGive = amount;
+                while (toGive > 0) {
+                    item.setAmount(Math.min(toGive, stackSize));
+                    world.dropItem(loc, item.clone());
+                    toGive -= Math.min(toGive, stackSize);
+                }
+            });
             if (ItemEdit.get().getConfig().loadBoolean("log.action.drop", true)) {
                 String msg = UtilsString.fix(this.getConfigString("log"), null, true, "%id%", args[1].toLowerCase(),
                         "%nick%", ItemEdit.get().getServerStorage().getNick(args[1]), "%amount%",

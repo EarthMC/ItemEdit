@@ -1,6 +1,5 @@
 package emanondev.itemedit;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -43,8 +42,8 @@ public class UtilsInventory {
             break;
         }
 
-        if (player instanceof Player)
-            Bukkit.getScheduler().runTaskLater(ItemEdit.get(), () -> ((Player) player).updateInventory(), 1L);
+        if (player instanceof Player p)
+            p.getScheduler().runDelayed(ItemEdit.get(), t -> p.updateInventory(), () -> {}, 1);
 
         if (remains == 0)
             return amount;
@@ -56,7 +55,8 @@ public class UtilsInventory {
                 while (remains > 0) {
                     int drop = Math.min(remains, 64);
                     item.setAmount(drop);
-                    player.getWorld().dropItem(player.getEyeLocation(), item);
+                    final ItemStack toDrop = item.clone();
+                    player.getScheduler().run(ItemEdit.get(), t -> player.getWorld().dropItem(player.getEyeLocation(), toDrop), () -> {});
                     remains -= drop;
                 }
                 return amount;
@@ -90,8 +90,8 @@ public class UtilsInventory {
                 item.setAmount(amount);
                 HashMap<Integer, ItemStack> map = player.getInventory().removeItem(item);
 
-                if (player instanceof Player)
-                    Bukkit.getScheduler().runTaskLater(ItemEdit.get(), () -> ((Player) player).updateInventory(), 1L);
+                if (player instanceof Player p)
+                    p.getScheduler().runDelayed(ItemEdit.get(), t -> p.updateInventory(), () -> {}, 1);
 
                 if (map.isEmpty())
                     return amount;
@@ -104,8 +104,8 @@ public class UtilsInventory {
                     item.setAmount(amount);
                     HashMap<Integer, ItemStack> map = player.getInventory().removeItem(item);
 
-                    if (player instanceof Player)
-                        Bukkit.getScheduler().runTaskLater(ItemEdit.get(), () -> ((Player) player).updateInventory(), 1L);
+                    if (player instanceof Player p)
+                        p.getScheduler().runDelayed(ItemEdit.get(), t -> p.updateInventory(), () -> {}, 1);
 
                     if (map.isEmpty())
                         return amount;

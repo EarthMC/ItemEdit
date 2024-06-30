@@ -58,11 +58,10 @@ public class ColorListSelectorGui implements Gui {
 
     @Override
     public void onClose(InventoryCloseEvent event) {
-        Bukkit.getScheduler().runTaskLater(getPlugin(),
-                () -> {
-                    if (!getTargetPlayer().getOpenInventory().getTopInventory().equals(parent.getInventory()))
-                        getTargetPlayer().openInventory(parent.getInventory());
-                }, 1L);
+        event.getPlayer().getScheduler().runDelayed(getPlugin(), task -> {
+            if (!getTargetPlayer().getOpenInventory().getTopInventory().equals(parent.getInventory()))
+                getTargetPlayer().openInventory(parent.getInventory());
+        }, () -> {}, 1L);
     }
 
     @Override
