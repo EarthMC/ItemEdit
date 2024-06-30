@@ -13,37 +13,39 @@ public class GuiHandler implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private static void onOpen(InventoryOpenEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof Gui))
+        if (!(event.getView().getTopInventory().getHolder(false) instanceof Gui gui))
             return;
         if (!(event.getPlayer() instanceof Player))
             return;
-        ((Gui) event.getView().getTopInventory().getHolder()).onOpen(event);
+
+        gui.onOpen(event);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private static void onClose(InventoryCloseEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof Gui))
+        if (!(event.getView().getTopInventory().getHolder(false) instanceof Gui gui))
             return;
         if (!(event.getPlayer() instanceof Player))
             return;
-        ((Gui) event.getView().getTopInventory().getHolder()).onClose(event);
+
+        gui.onClose(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     private static void onClick(InventoryClickEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof Gui))
+        if (!(event.getView().getTopInventory().getHolder(false) instanceof Gui gui))
             return;
         event.setCancelled(true);
         if (event.getClickedInventory() != null && event.getClickedInventory().equals(event.getView().getTopInventory()))
             if (event.getWhoClicked() instanceof Player)
-                ((Gui) event.getView().getTopInventory().getHolder()).onClick(event);
+                gui.onClick(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     private static void onDrag(InventoryDragEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof Gui) {
+        if (event.getView().getTopInventory().getHolder(false) instanceof Gui gui) {
             event.setCancelled(true);
-            ((Gui) event.getView().getTopInventory().getHolder()).onDrag(event);
+            gui.onDrag(event);
         }
     }
 }
